@@ -4,6 +4,7 @@ import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/app_chip.dart';
 import '../../../../shared/widgets/glass_card.dart';
 import '../../models/project_model.dart';
+import 'project_details_dialog.dart';
 
 /// Reusable project card widget displaying preview canvas, category, status,
 /// title, description, tech tags, and clearly defined action states.
@@ -17,11 +18,20 @@ class ProjectCard extends StatelessWidget {
     this.onDetailsTap,
   });
 
+  void _handleTap(BuildContext context) {
+    if (onDetailsTap != null) {
+      onDetailsTap!();
+    } else {
+      ProjectDetailsDialog.show(context, project);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GlassCard(
       enableHoverLift: true,
       padding: EdgeInsets.zero,
+      onTap: () => _handleTap(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -97,7 +107,7 @@ class ProjectCard extends StatelessWidget {
                 const SizedBox(height: 14),
                 _ProjectActionRow(
                   project: project,
-                  onDetailsTap: onDetailsTap,
+                  onDetailsTap: () => _handleTap(context),
                 ),
               ],
             ),
@@ -110,16 +120,16 @@ class ProjectCard extends StatelessWidget {
 
 class _ProjectActionRow extends StatelessWidget {
   final ProjectModel project;
-  final VoidCallback? onDetailsTap;
+  final VoidCallback onDetailsTap;
 
   const _ProjectActionRow({
     required this.project,
-    this.onDetailsTap,
+    required this.onDetailsTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final isUpcoming = project.status == ProjectStatus.upcoming;
+    final statusText = _getStatusDescription(project.status);
 
     return Wrap(
       alignment: WrapAlignment.spaceBetween,
@@ -127,45 +137,24 @@ class _ProjectActionRow extends StatelessWidget {
       spacing: 12,
       runSpacing: 10,
       children: [
-        // Status explanation / action
-        if (isUpcoming)
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.hourglass_top_rounded,
-                size: 15,
-                color: AppColors.accentAmber,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                'In Active Development',
-                style: AppTypography.bodySmall(color: AppColors.accentAmber)
-                    .copyWith(fontWeight: FontWeight.w600),
-              ),
-            ],
-          )
-        else
-          InkWell(
-            onTap: onDetailsTap,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Case Study',
-                  style: AppTypography.button(color: AppColors.accentViolet),
-                ),
-                const SizedBox(width: 4),
-                const Icon(
-                  Icons.arrow_forward_rounded,
-                  size: 14,
-                  color: AppColors.accentViolet,
-                ),
-              ],
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              _getStatusIcon(project.status),
+              size: 15,
+              color: project.status.color,
             ),
-          ),
+            const SizedBox(width: 6),
+            Text(
+              statusText,
+              style: AppTypography.bodySmall(color: project.status.color)
+                  .copyWith(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
 
-        // Non-misleading action button
+        // Action button
         TextButton.icon(
           onPressed: onDetailsTap,
           style: TextButton.styleFrom(
@@ -176,18 +165,44 @@ class _ProjectActionRow extends StatelessWidget {
               side: const BorderSide(color: AppColors.borderSubtle),
             ),
           ),
-          icon: Icon(
-            isUpcoming ? Icons.info_outline_rounded : Icons.open_in_new_rounded,
+          icon: const Icon(
+            Icons.info_outline_rounded,
             size: 14,
             color: AppColors.textSecondary,
           ),
           label: Text(
-            isUpcoming ? 'Details Preview' : 'Explore',
+            'Details Preview',
             style: AppTypography.bodySmall(color: AppColors.textSecondary),
           ),
         ),
       ],
     );
+  }
+
+  IconData _getStatusIcon(ProjectStatus status) {
+    switch (status) {
+      case ProjectStatus.upcoming:
+        return Icons.hourglass_top_rounded;
+      case ProjectStatus.inDevelopment:
+        return Icons.build_circle_rounded;
+      case ProjectStatus.planned:
+        return Icons.schedule_rounded;
+      case ProjectStatus.completed:
+        return Icons.check_circle_rounded;
+    }
+  }
+
+  String _getStatusDescription(ProjectStatus status) {
+    switch (status) {
+      case ProjectStatus.upcoming:
+        return 'Upcoming Project';
+      case ProjectStatus.inDevelopment:
+        return 'In Active Development';
+      case ProjectStatus.planned:
+        return 'Planned Milestone';
+      case ProjectStatus.completed:
+        return 'Project Live';
+    }
   }
 }
 
@@ -250,7 +265,7 @@ class _ProjectPreviewBanner extends StatelessWidget {
                 border: Border.all(color: AppColors.borderSubtle),
               ),
               child: Text(
-                'SPECIFICATION 001',
+                'SPECIFICATION 002',
                 style: AppTypography.eyebrow(color: AppColors.textMuted)
                     .copyWith(fontSize: 9),
               ),
@@ -263,12 +278,17 @@ class _ProjectPreviewBanner extends StatelessWidget {
 
   Widget _buildCategoryIllustration(ProjectModel project) {
     switch (project.category) {
+      case 'Web Apps':
       case 'Web Application':
         return _buildWebAppIllustration();
+      case 'UI/UX':
       case 'UI/UX Design':
         return _buildDesignIllustration();
+      case 'Java':
       case 'Software Project':
         return _buildBackendIllustration();
+      case 'AI':
+        return _buildAIIllustration();
       default:
         return Icon(project.categoryIcon, size: 54, color: project.accentColor);
     }
@@ -414,9 +434,7 @@ class _ProjectPreviewBanner extends StatelessWidget {
 
   Widget _buildBackendIllustration() {
     return Container(
-      width: 240,
-      height: 110,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.surfacePrimary,
         borderRadius: BorderRadius.circular(10),
@@ -426,12 +444,39 @@ class _ProjectPreviewBanner extends StatelessWidget {
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _nodeBox(Icons.dns_rounded, 'Java API', AppColors.accentCyan),
-          const Icon(Icons.sync_alt_rounded, size: 18, color: AppColors.textMuted),
-          _nodeBox(Icons.auto_awesome_rounded, 'AI Engine', AppColors.accentViolet),
+          const SizedBox(width: 12),
+          const Icon(Icons.sync_alt_rounded, size: 16, color: AppColors.textMuted),
+          const SizedBox(width: 12),
+          _nodeBox(Icons.auto_awesome_rounded, 'Spring Core', AppColors.accentViolet),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAIIllustration() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      decoration: BoxDecoration(
+        color: AppColors.surfacePrimary,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color(0xFFA855F7).withValues(alpha: 0.4),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _nodeBox(Icons.psychology_rounded, 'Prompt', const Color(0xFFA855F7)),
+          const SizedBox(width: 12),
+          const Icon(Icons.auto_awesome_rounded, size: 15, color: AppColors.textMuted),
+          const SizedBox(width: 12),
+          _nodeBox(Icons.smart_toy_rounded, 'AI Engine', AppColors.accentCyan),
         ],
       ),
     );
@@ -442,19 +487,19 @@ class _ProjectPreviewBanner extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(7),
           decoration: BoxDecoration(
             color: c.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(7),
             border: Border.all(color: c.withValues(alpha: 0.4)),
           ),
-          child: Icon(icon, size: 20, color: c),
+          child: Icon(icon, size: 16, color: c),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 5),
         Text(
           label,
           style: AppTypography.eyebrow(color: AppColors.textPrimary)
-              .copyWith(fontSize: 10),
+              .copyWith(fontSize: 10, letterSpacing: 0.3),
         ),
       ],
     );

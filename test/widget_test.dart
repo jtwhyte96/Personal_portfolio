@@ -36,8 +36,8 @@ void main() {
 
     // Verify 3 placeholder project cards
     expect(find.text('Full-Stack Web Application'), findsOneWidget);
-    expect(find.text('Design System & UX Case Study'), findsOneWidget);
-    expect(find.text('Enterprise Java & AI Workflow Engine'), findsOneWidget);
+    expect(find.text('Design System & Interface Architecture'), findsOneWidget);
+    expect(find.text('Enterprise Java Service Engine'), findsOneWidget);
   });
 
   testWidgets('Portfolio Homepage mobile viewport test (390 x 844)',

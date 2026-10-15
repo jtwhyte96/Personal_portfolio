@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'core/constants/app_constants.dart';
+import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
-import 'features/home/presentation/home_page.dart';
 
-/// Root application widget configuring shared dark theme, routes,
+/// Root application widget configuring shared dark theme, centralized routing,
 /// and responsive layout foundations.
 class PortfolioApp extends StatelessWidget {
   const PortfolioApp({super.key});
@@ -14,7 +14,8 @@ class PortfolioApp extends StatelessWidget {
       title: '${AppConstants.placeholderName} | ${AppConstants.heroHeadline}',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
-      home: const HomePage(),
+      initialRoute: AppRoutes.home,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_constants.dart';
+import '../../../core/routes/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 import 'widgets/about_preview_section.dart';
 import 'widgets/contact_section.dart';
@@ -15,7 +16,9 @@ import 'widgets/tech_strip.dart';
 /// hero section with abstract cyber-tech composition, skills strip,
 /// upcoming featured projects, about preview, contact CTA, and footer.
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? initialSection;
+
+  const HomePage({super.key, this.initialSection});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -30,6 +33,32 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey _contactKey = GlobalKey();
 
   String _activeSection = AppConstants.navHome;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSection != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _handleInitialSection(widget.initialSection!);
+      });
+    }
+  }
+
+  void _handleInitialSection(String section) {
+    switch (section) {
+      case AppConstants.navProjects:
+        _scrollToKey(_projectsKey, AppConstants.navProjects);
+        break;
+      case AppConstants.navAbout:
+        _scrollToKey(_aboutKey, AppConstants.navAbout);
+        break;
+      case AppConstants.navContact:
+        _scrollToKey(_contactKey, AppConstants.navContact);
+        break;
+      default:
+        _scrollToKey(_homeKey, AppConstants.navHome);
+    }
+  }
 
   @override
   void dispose() {
@@ -48,6 +77,10 @@ class _HomePageState extends State<HomePage> {
         alignment: 0.0,
       );
     }
+  }
+
+  void _navigateToProjectsGallery() {
+    Navigator.pushNamed(context, AppRoutes.projects);
   }
 
   @override
@@ -102,7 +135,9 @@ class _HomePageState extends State<HomePage> {
                   // Selected Work / Featured Projects Section
                   Container(
                     key: _projectsKey,
-                    child: const FeaturedProjectsSection(),
+                    child: FeaturedProjectsSection(
+                      onViewAllProjects: _navigateToProjectsGallery,
+                    ),
                   ),
 
                   // About Me Preview Section
@@ -124,8 +159,7 @@ class _HomePageState extends State<HomePage> {
                   AppFooter(
                     onHomeTap: () =>
                         _scrollToKey(_homeKey, AppConstants.navHome),
-                    onProjectsTap: () =>
-                        _scrollToKey(_projectsKey, AppConstants.navProjects),
+                    onProjectsTap: _navigateToProjectsGallery,
                     onAboutTap: () =>
                         _scrollToKey(_aboutKey, AppConstants.navAbout),
                     onContactTap: () =>
@@ -144,8 +178,7 @@ class _HomePageState extends State<HomePage> {
             child: AppNavBar(
               activeSection: _activeSection,
               onHomeTap: () => _scrollToKey(_homeKey, AppConstants.navHome),
-              onProjectsTap: () =>
-                  _scrollToKey(_projectsKey, AppConstants.navProjects),
+              onProjectsTap: _navigateToProjectsGallery,
               onAboutTap: () => _scrollToKey(_aboutKey, AppConstants.navAbout),
               onContactTap: () =>
                   _scrollToKey(_contactKey, AppConstants.navContact),

@@ -3,7 +3,8 @@ import '../../../core/theme/app_colors.dart';
 
 enum ProjectStatus {
   upcoming('Upcoming', AppColors.accentAmber),
-  inProgress('In Progress', AppColors.accentBlue),
+  inDevelopment('In Development', AppColors.accentBlue),
+  planned('Planned', Color(0xFFA855F7)),
   completed('Completed', AppColors.accentEmerald);
 
   final String label;
@@ -12,6 +13,8 @@ enum ProjectStatus {
   const ProjectStatus(this.label, this.color);
 }
 
+/// Core project model holding metadata, technology tags, status, and milestone planning.
+/// Data is maintained separately from visual UI rendering.
 class ProjectModel {
   final String id;
   final String title;
@@ -24,6 +27,7 @@ class ProjectModel {
   final String? liveUrl;
   final String? sourceCodeUrl;
   final String? caseStudyRoute;
+  final List<String> plannedMilestones;
 
   const ProjectModel({
     required this.id,
@@ -37,14 +41,15 @@ class ProjectModel {
     this.liveUrl,
     this.sourceCodeUrl,
     this.caseStudyRoute,
+    this.plannedMilestones = const [],
   });
 
-  /// The 3 explicitly marked upcoming placeholder projects per portfolio requirements
-  static List<ProjectModel> get initialProjects => const [
+  /// 4 initial placeholder projects per Stitch Screen 002 specification
+  static List<ProjectModel> get allProjects => const [
         ProjectModel(
-          id: 'web-app-upcoming',
+          id: 'web-app-platform',
           title: 'Full-Stack Web Application',
-          category: 'Web Application',
+          category: 'Web Apps',
           description:
               'Upcoming production-ready web application showcasing responsive state management, '
               'modern design tokens, and modular Dart architecture.',
@@ -52,12 +57,18 @@ class ProjectModel {
           status: ProjectStatus.upcoming,
           categoryIcon: Icons.web_rounded,
           accentColor: AppColors.accentBlue,
-          caseStudyRoute: '/projects/web-app',
+          caseStudyRoute: '/projects/web-app-platform',
+          plannedMilestones: [
+            'Architecture blueprint & domain models',
+            'Reusable component library & responsive layout tokens',
+            'REST API client & state management integration',
+            'End-to-end integration testing & web optimization',
+          ],
         ),
         ProjectModel(
-          id: 'ui-ux-design-upcoming',
-          title: 'Design System & UX Case Study',
-          category: 'UI/UX Design',
+          id: 'interface-design-system',
+          title: 'Design System & Interface Architecture',
+          category: 'UI/UX',
           description:
               'Upcoming comprehensive design system and user research case study examining '
               'accessible interactions, typography hierarchies, and dark-mode component architecture.',
@@ -65,20 +76,57 @@ class ProjectModel {
           status: ProjectStatus.upcoming,
           categoryIcon: Icons.design_services_rounded,
           accentColor: AppColors.accentViolet,
-          caseStudyRoute: '/projects/ui-ux',
+          caseStudyRoute: '/projects/interface-design-system',
+          plannedMilestones: [
+            'User journey mapping & accessibility audit (WCAG AA)',
+            'Atomic design token library in Figma',
+            'Interactive component prototyping & micro-interaction specs',
+            'Flutter Web design token mapping & package publish',
+          ],
         ),
         ProjectModel(
-          id: 'software-project-upcoming',
-          title: 'Enterprise Java & AI Workflow Engine',
-          category: 'Software Project',
+          id: 'enterprise-java-service',
+          title: 'Enterprise Java Service Engine',
+          category: 'Java',
           description:
-              'Upcoming backend integration platform combining Java microservices architecture '
-              'with automated AI prompting pipelines and developer tooling.',
-          techTags: ['Java', 'Spring Boot', 'AI Workflows', 'Clean Architecture'],
-          status: ProjectStatus.upcoming,
+              'Backend integration platform in active development, combining Java microservices architecture '
+              'with clean domain boundaries, automated testing, and developer tooling.',
+          techTags: ['Java', 'Spring Boot', 'Clean Architecture', 'Microservices'],
+          status: ProjectStatus.inDevelopment,
           categoryIcon: Icons.terminal_rounded,
           accentColor: AppColors.accentCyan,
-          caseStudyRoute: '/projects/software-engine',
+          caseStudyRoute: '/projects/enterprise-java-service',
+          plannedMilestones: [
+            'Clean Architecture domain layer & entity specifications',
+            'Spring Boot RESTful service endpoints with JWT security',
+            'Integration tests with Testcontainers & mock services',
+            'Dockerized container pipeline & performance benchmarking',
+          ],
+        ),
+        ProjectModel(
+          id: 'ai-prompt-workflow-lab',
+          title: 'AI Workflow & Prompt Engineering Lab',
+          category: 'AI',
+          description:
+              'Planned experimental suite investigating generative AI prompt workflows, '
+              'automated code verification pipelines, and agentic assistant scaffolding.',
+          techTags: ['AI Workflows', 'Prompt Engineering', 'LLM APIs', 'Automation'],
+          status: ProjectStatus.planned,
+          categoryIcon: Icons.auto_awesome_rounded,
+          accentColor: Color(0xFFA855F7),
+          caseStudyRoute: '/projects/ai-prompt-workflow-lab',
+          plannedMilestones: [
+            'Structured prompting schemas & evaluation test suites',
+            'LLM API orchestration layer with streaming responses',
+            'Code refactoring tool-use agent prototypes',
+            'Benchmark documentation & developer case study',
+          ],
         ),
       ];
+
+  /// Shared featured projects consumed by Homepage Screen 001
+  static List<ProjectModel> get featuredProjects => allProjects.take(3).toList();
+
+  /// Backwards-compatibility alias for initialProjects
+  static List<ProjectModel> get initialProjects => featuredProjects;
 }
