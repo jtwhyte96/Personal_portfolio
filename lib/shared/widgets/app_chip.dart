@@ -63,11 +63,14 @@ class _AppChipState extends State<AppChip> {
                 ),
                 const SizedBox(width: 6),
               ],
-              Text(
-                widget.label,
-                style: AppTypography.bodySmall(
-                  color: _isHovered ? AppColors.textPrimary : AppColors.textSecondary,
-                ).copyWith(fontWeight: FontWeight.w500),
+              Flexible(
+                child: Text(
+                  widget.label,
+                  overflow: TextOverflow.ellipsis,
+                  style: AppTypography.bodySmall(
+                    color: _isHovered ? AppColors.textPrimary : AppColors.textSecondary,
+                  ).copyWith(fontWeight: FontWeight.w500),
+                ),
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../features/about/presentation/about_page.dart';
 import '../../features/home/presentation/home_page.dart';
 import '../../features/projects/presentation/projects_page.dart';
 
@@ -8,6 +9,7 @@ class AppRoutes {
 
   static const String home = '/';
   static const String projects = '/projects';
+  static const String about = '/about';
 
   /// Generates routes with proper URL synchronization for Flutter Web.
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -23,6 +25,12 @@ class AppRoutes {
         return MaterialPageRoute<void>(
           settings: settings,
           builder: (_) => const ProjectsPage(),
+        );
+
+      case about:
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (_) => const AboutPage(),
         );
 
       default:

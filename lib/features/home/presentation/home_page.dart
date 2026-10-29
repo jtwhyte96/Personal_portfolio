@@ -83,6 +83,10 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushNamed(context, AppRoutes.projects);
   }
 
+  void _navigateToAbout() {
+    Navigator.pushNamed(context, AppRoutes.about);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,8 +164,7 @@ class _HomePageState extends State<HomePage> {
                     onHomeTap: () =>
                         _scrollToKey(_homeKey, AppConstants.navHome),
                     onProjectsTap: _navigateToProjectsGallery,
-                    onAboutTap: () =>
-                        _scrollToKey(_aboutKey, AppConstants.navAbout),
+                    onAboutTap: _navigateToAbout,
                     onContactTap: () =>
                         _scrollToKey(_contactKey, AppConstants.navContact),
                   ),
@@ -179,7 +182,7 @@ class _HomePageState extends State<HomePage> {
               activeSection: _activeSection,
               onHomeTap: () => _scrollToKey(_homeKey, AppConstants.navHome),
               onProjectsTap: _navigateToProjectsGallery,
-              onAboutTap: () => _scrollToKey(_aboutKey, AppConstants.navAbout),
+              onAboutTap: _navigateToAbout,
               onContactTap: () =>
                   _scrollToKey(_contactKey, AppConstants.navContact),
             ),

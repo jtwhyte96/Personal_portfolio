@@ -109,6 +109,10 @@ class _ProjectsPageState extends State<ProjectsPage> {
     Navigator.pushNamed(context, AppRoutes.home, arguments: section);
   }
 
+  void _navigateToAbout() {
+    Navigator.pushNamed(context, AppRoutes.about);
+  }
+
   @override
   Widget build(BuildContext context) {
     final filteredList = _filteredProjects;
@@ -235,8 +239,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                         curve: Curves.easeOutCubic,
                       );
                     },
-                    onAboutTap: () =>
-                        _navigateToHomeSection(AppConstants.navAbout),
+                    onAboutTap: _navigateToAbout,
                     onContactTap: () =>
                         _navigateToHomeSection(AppConstants.navContact),
                   ),
@@ -260,7 +263,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                   curve: Curves.easeOutCubic,
                 );
               },
-              onAboutTap: () => _navigateToHomeSection(AppConstants.navAbout),
+              onAboutTap: _navigateToAbout,
               onContactTap: () =>
                   _navigateToHomeSection(AppConstants.navContact),
             ),

@@ -5,6 +5,7 @@ import '../../../../core/constants/app_constants.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_typography.dart';
 import '../../../../shared/widgets/app_buttons.dart';
+import '../../../../shared/widgets/contact_dialog.dart';
 import '../../../../shared/widgets/glass_card.dart';
 
 /// Contact section featuring call-to-action, direct email connection,
@@ -34,92 +35,7 @@ class ContactSection extends StatelessWidget {
   }
 
   void _showContactDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          backgroundColor: AppColors.surfacePrimary,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-            side: const BorderSide(color: AppColors.borderSubtle, width: 1.2),
-          ),
-          title: Row(
-            children: [
-              const Icon(Icons.send_rounded, color: AppColors.accentViolet, size: 22),
-              const SizedBox(width: 10),
-              Text(
-                'Let\'s Connect',
-                style: AppTypography.titleMedium(),
-              ),
-            ],
-          ),
-          content: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Reach out directly via email or check my developer profiles:',
-                  style: AppTypography.bodyMedium(),
-                ),
-                const SizedBox(height: 16),
-                _ContactModalItem(
-                  icon: Icons.email_rounded,
-                  title: 'Email',
-                  subtitle: AppConstants.placeholderEmail,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _handleLinkTap(
-                      context,
-                      'mailto:${AppConstants.placeholderEmail}',
-                      'Email',
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                _ContactModalItem(
-                  icon: Icons.code_rounded,
-                  title: 'GitHub',
-                  subtitle: AppConstants.placeholderGithub,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _handleLinkTap(
-                      context,
-                      AppConstants.placeholderGithub,
-                      'GitHub',
-                    );
-                  },
-                ),
-                const SizedBox(height: 10),
-                _ContactModalItem(
-                  icon: Icons.link_rounded,
-                  title: 'LinkedIn',
-                  subtitle: AppConstants.placeholderLinkedin,
-                  onTap: () {
-                    Navigator.pop(ctx);
-                    _handleLinkTap(
-                      context,
-                      AppConstants.placeholderLinkedin,
-                      'LinkedIn',
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx),
-              child: Text(
-                'Close',
-                style: AppTypography.button(color: AppColors.textPrimary),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    AppContactDialog.show(context);
   }
 
   @override
@@ -316,38 +232,3 @@ class _ChannelLinkState extends State<_ChannelLink> {
   }
 }
 
-class _ContactModalItem extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  const _ContactModalItem({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceSecondary,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, size: 20, color: AppColors.accentViolet),
-      ),
-      title: Text(title, style: AppTypography.bodyMedium(color: AppColors.textPrimary)),
-      subtitle: Text(subtitle, style: AppTypography.bodySmall()),
-      trailing: const Icon(Icons.arrow_outward_rounded, size: 16, color: AppColors.textMuted),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-        side: const BorderSide(color: AppColors.borderSubtle),
-      ),
-      onTap: onTap,
-    );
-  }
-}

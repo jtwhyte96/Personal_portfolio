@@ -36,6 +36,14 @@ class AppConstants {
   static const String placeholderEmail = 'contact@example.com';
   static const String placeholderGithub = 'https://github.com/your-username';
   static const String placeholderLinkedin = 'https://linkedin.com/in/your-username';
+  static const String placeholderResumeUrl = '';
+
+  // About Page Headings & CTAs (Screen 003)
+  static const String aboutPageHeading =
+      'Building software. Exploring AI. Designing better experiences.';
+  static const String aboutCtaHeadline = "LET'S BUILD SOMETHING MEANINGFUL";
+  static const String aboutCtaSubheadline =
+      "I'm interested in opportunities to learn, collaborate, and contribute to practical software and AI-enabled projects.";
 
   // Navigation targets
   static const String navHome = 'Home';
